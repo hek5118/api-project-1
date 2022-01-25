@@ -22,7 +22,7 @@ export class UserIP extends LitElement {
     // Java or other Object Oriented Programming Language
     // so for this one, we're storing a reference to the API endpoint
     // so that if it ever changed it would be easier to update
-    this.ipLookUp = 'https://ip-fast.com/api/ip/?format=json&location=True'; // changed False to True
+    this.ipLookUp = 'https://ip-fast.com/api/ip/?format=json&location=True'; // changed False to True so it finds location
   }
 
   // properties that you wish to use as data in HTML, CSS, and the updated life-cycle
@@ -54,6 +54,7 @@ export class UserIP extends LitElement {
         const evt = new CustomEvent('ip-changed', {
           // send the event up in the HTML document
           bubbles: true,
+          // i am not familiar with bubbles/cimposed/cancelable
           // move up out of custom tags (that have a shadowRoot) and regular HTML tags
           composed: true,
           // other developers / code is allowed to tell this event to STOP going up in the DOM
@@ -104,8 +105,8 @@ export class UserIP extends LitElement {
       })
       .then(data => {
         this.ip = data.ip;
-        this.city = data.city; // added this... not sure how to do it a better/ shorter way than city and country separate
-        this.country = data.country; // added this as well ^^
+        this.country = data.country; // added this... not sure how to do it a better/ shorter way than city and country separate
+        this.city = data.city; // added this as well ^^
         return data;
       });
   }
@@ -145,12 +146,10 @@ export class UserIP extends LitElement {
   render() {
     return html` <ul>
       <li><strong class="ipaddress">IP address:</strong> ${this.ip}</li>
-      <li><strong class="ipaddress">City:</strong> ${this.country}</li>
-      //added these two lines to return city and country but not sure if this is
-      right
+      <li><strong class="ipaddress">Country:</strong> ${this.country}</li>
       <li><strong class="ipaddress">City:</strong> ${this.city}</li>
     </ul>`;
-  }
+  } // added these two lines to return city and country but not sure if this is right
 }
 
 customElements.define(UserIP.tag, UserIP);
