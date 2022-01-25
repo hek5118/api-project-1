@@ -22,22 +22,26 @@ export class UserIP extends LitElement {
     // Java or other Object Oriented Programming Language
     // so for this one, we're storing a reference to the API endpoint
     // so that if it ever changed it would be easier to update
-    this.ipLookUp = 'https://ip-fast.com/api/ip/?format=json&location=False';
+    this.ipLookUp = 'https://ip-fast.com/api/ip/?format=json&location=True'; // changed False to True
   }
 
   // properties that you wish to use as data in HTML, CSS, and the updated life-cycle
   static get properties() {
     return {
       ip: { type: String, reflect: true },
+      city: { type: String, reflect: true }, // added this so the location is returned as well (city and country)
+      country: { type: String, reflect: true }, // ^^
     };
   }
 
   // updated fires every time a property defined above changes
   // this allows you to react to variables changing and use javascript to perform logic
   updated(changedProperties) {
+    // updates ip? maybe?
     // this is looping over an array of values that's keyed by property name == the old value
     // this is because you could always write this.whatever if "whatever" is the property name in question
     changedProperties.forEach((oldValue, propName) => {
+      // changes oldproperty value to updated version
       // see if the current property that we know changed, is called ip
       // also see if it has ANY value. We benefit from JS being lazy typed here because null
       // (our default value) will fail this test but ANY VALUE will pass it
@@ -90,6 +94,7 @@ export class UserIP extends LitElement {
    * it'll run regardless since we're not doing other actions
    */
   async updateUserIP() {
+    // no idea what the async denotes and fuzzy on fetch in js
     return fetch(this.ipLookUp)
       .then(resp => {
         if (resp.ok) {
@@ -99,6 +104,8 @@ export class UserIP extends LitElement {
       })
       .then(data => {
         this.ip = data.ip;
+        this.city = data.city; // added this... not sure how to do it a better/ shorter way than city and country separate
+        this.country = data.country; // added this as well ^^
         return data;
       });
   }
@@ -138,7 +145,10 @@ export class UserIP extends LitElement {
   render() {
     return html` <ul>
       <li><strong class="ipaddress">IP address:</strong> ${this.ip}</li>
-      <li></li>
+      <li><strong class="ipaddress">City:</strong> ${this.country}</li>
+      //added these two lines to return city and country but not sure if this is
+      right
+      <li><strong class="ipaddress">City:</strong> ${this.city}</li>
     </ul>`;
   }
 }
